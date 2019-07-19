@@ -1,6 +1,7 @@
 package main
 
 import "fmt"
+
 // main start of the program. This function takes optional inputs for character
 // generation and performs the following:
 //	selects the character archetype
@@ -12,12 +13,13 @@ import "fmt"
 //	selects gear from a gear table
 //	assigns an amount of credits
 //	assigns a drive
-func main(){
+func main() {
 	player := GeneratePlayer("Player")
 	//TODO: Pull name from input or a name generator
 	fmt.Println(fmt.Sprintf("Player Name: %s", player.Name))
 	fmt.Println(fmt.Sprintf("Hit Points: %d", player.HitPoints))
 	fmt.Println(fmt.Sprintf("Archetype: %s", player.Archetype.Name))
+	fmt.Println(fmt.Sprintf("           %s", player.Archetype.Description))
 	fmt.Println("Traits:")
 	for key, val := range player.Traits {
 		fmt.Println(fmt.Sprintf("  %s: %s", key, val.Description))
@@ -31,7 +33,7 @@ func main(){
 	if len(player.Psionics) > 0 {
 		for discipline, capabilities := range player.Psionics {
 			fmt.Println(fmt.Sprintf("%s Discipline:", discipline))
-			for _, capability:= range capabilities {
+			for _, capability := range capabilities {
 				fmt.Println(fmt.Sprintf("  %s: %s", capability.Name, capability.Description))
 			}
 		}
