@@ -1,4 +1,4 @@
-package main
+package character
 
 import (
 	"fmt"
@@ -6,13 +6,15 @@ import (
 	"time"
 )
 
+var noop = func(*Character) {}
+
 type Trait struct {
 	Name        string
 	Description string
-	manipulate  Manipulator
+	manipulate  characterManipulator
 }
 
-var traitsTable = []Trait{
+var traits = []Trait{
 	{"Acrobat", "You gain an Advantage when Testing to do acrobatic tricks", noop},
 	{"Ambush Specialist", "You gain Advantage on Tests to locate, disarm, and detect ambushes and traps. You also gain Advantage on Save Tests to avoid traps.", noop},
 	{"Armor Master", "You have 3 extra Hit Points when wearing Armor of any type. These cannot be healed until repaired (8 hours)", noop},
@@ -40,24 +42,24 @@ var traitsTable = []Trait{
 	{"Nimble Fingers", "You gain Advantage when Testing to pick locks, steam, or sleight-of-hand.", noop},
 	{"Opportunist", "You may immediately attack with Disadvantage when an enemy within range misses an attack against you.", noop},
 	{"Perceptive", "You gain Advantage when Testing to gain information about your surroundings or find things that may be hidden. You gain this even while you sleep.", noop},
-	{"Psionic", "You have psionic abilities. When you use these abilities, you must mae a successful Test or the Action is wasted. This trait can be selected multiple times.", func(player *Player) {
+	{"Psionic", "You have psionic abilities. When you use these abilities, you must mae a successful Test or the Action is wasted. This trait can be selected multiple times.", func(character *Character) {
 		discipline := psionicDiscipline[rando.Intn(len(psionicDiscipline))]
 		//Psionics can exist multiple times, remove the generic entry and replace with a discipline specific one
-		player.Traits[fmt.Sprintf("Psionics: %s", discipline)] = player.Traits["Psionics"]
-		delete(player.Traits, "Psionics")
-		player.Psionics[discipline] = psionicsTable[discipline]
+		character.Traits[fmt.Sprintf("Psionics: %s", discipline)] = character.Traits["Psionics"]
+		delete(character.Traits, "Psionics")
+		character.Psionics[discipline] = psionicsTable[discipline]
 	}},
 	{"Quartermaster", "When you roll for Usage, you can choose to reroll once per day. You must keep the second result.", noop},
 	{"Quick Shot", "You are able to reload a Ranged Weapon and fire it in a single Action.", noop},
 	{"Resolute", "You gain Advantage on all Save Tests.", noop},
-	{"Shield Bearer", "While erilding a shield, Test with 2d6 on Evade instead of 1d6. You start with a Shield.", func(player *Player) {
-		player.Inventory = append(player.Inventory, "Shield")
+	{"Shield Bearer", "While erilding a shield, Test with 2d6 on Evade instead of 1d6. You start with a Shield.", func(character *Character) {
+		character.Inventory = append(character.Inventory, "Shield")
 	}},
 	{"Sneaky", "You gain Advantage when Testing to hide or sneak around without others noticing you.", noop},
 	{"Strong", "You gain Advantage when Testing to do something with brute force.", noop},
 	{"Survivalist", "You gain Advantage when Testing to forage for food, find water, seek shelter, or create shelter in the whild.", noop},
-	{"Tough", "You gain 2 additional HP", func(player *Player) {
-		player.HitPoints = player.HitPoints + 2
+	{"Tough", "You gain 2 additional HP", func(character *Character) {
+		character.HitPoints = character.HitPoints + 2
 	}},
 	{"Tracker", "You gain Adgantage when Testing to track someone ", noop},
 	{"Trapmaster", "You gain Advantage on Saves against and Testing to create, locate, disarming, or Saving traps.", noop},
@@ -72,8 +74,8 @@ var mutations = []Trait{
 	{"Third Eye", "You may reroll a a Disadvantage a failed Perception Test", noop},
 	{"Jumpin' Jack", "You gain Advantage on any Test related to jumping, running, or moving around.", noop},
 	{"Bone Spines", "You can protrude Bone Spines as a melee or ranged weapon. It costs an Action to deploy. You gain Advantage on the first attack each combat with this weapon. Counts as both Light Melee and Ranged. The Ranged version has an Ammo of 2 and automatically refills to 2 each day.", noop},
-	{"Scales and Stuff", "You gain +2 HP. If you have the Diehard Trait, you can use it one additional time per day.", func(player *Player) {
-		player.HitPoints = player.HitPoints + 2
+	{"Scales and Stuff", "You gain +2 HP. If you have the Diehard Trait, you can use it one additional time per day.", func(character *Character) {
+		character.HitPoints = character.HitPoints + 2
 	}},
 }
 
@@ -115,29 +117,29 @@ var psionicsTable = map[string][]Trait{
 var seed = rand.NewSource(time.Now().UnixNano())
 var rando = rand.New(seed)
 
-// AddTraits to a Player. Traits may instead be Mutations and are randomly decided
-// upon and limited to the amount of Traits and/or Mutations allowed by the Player
+// SetTraits to a Character. Traits may instead be Mutations and are randomly decided
+// upon and limited to the amount of Traits and/or Mutations allowed by the Character
 // Archetype.
-func AddTraits(player *Player) {
-	for (len(player.Mutations) + len(player.Traits)) < player.maxTraits {
-		if len(player.Mutations) < player.maxMutations {
+func SetTraits(character *Character) {
+	for (len(character.Mutations) + len(character.Traits)) < character.maxTraits {
+		if len(character.Mutations) < character.maxMutations {
 			if rando.Intn(2) == 1 {
-				addMutation(player)
+				addMutation(character)
 				continue
 			}
 		}
-		addTrait(player)
+		addTrait(character)
 	}
 }
 
-func addTrait(player *Player) {
-	trait := traitsTable[rando.Intn(len(traitsTable))]
-	player.Traits[trait.Name] = trait
-	trait.manipulate(player)
+func addTrait(character *Character) {
+	trait := traits[rando.Intn(len(traits))]
+	character.Traits[trait.Name] = trait
+	trait.manipulate(character)
 }
 
-func addMutation(player *Player) {
+func addMutation(character *Character) {
 	mutation := mutations[rando.Intn(len(mutations))]
-	player.Mutations[mutation.Name] = mutation
-	mutation.manipulate(player)
+	character.Mutations[mutation.Name] = mutation
+	mutation.manipulate(character)
 }

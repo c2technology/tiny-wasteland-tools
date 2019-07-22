@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/c2technology/tiny-wasteland-tools/character"
+)
 
 // main start of the program. This function takes optional inputs for character
 // generation and performs the following:
@@ -14,7 +17,7 @@ import "fmt"
 //	assigns an amount of credits
 //	assigns a drive
 func main() {
-	player := GeneratePlayer("Player")
+	player := character.Generate("Player")
 	//TODO: Pull name from input or a name generator
 	fmt.Println(fmt.Sprintf("Player Name: %s", player.Name))
 	fmt.Println(fmt.Sprintf("Hit Points: %d", player.HitPoints))

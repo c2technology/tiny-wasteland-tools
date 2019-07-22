@@ -1,10 +1,7 @@
-package main
+package character
 
-type Manipulator func(*Player)
-
-var noop = func(*Player) {}
-
-type Player struct {
+//Character contains defined attributes
+type Character struct {
 	Name         string
 	HitPoints    int
 	Archetype    Archetype
@@ -19,8 +16,9 @@ type Player struct {
 	maxTraits    int
 }
 
-func GeneratePlayer(name string) Player {
-	player := Player{
+//Generate a Character with random attributes and the given name
+func Generate(name string) Character {
+	character := Character{
 		Name:         name,
 		maxTraits:    3,
 		maxMutations: 1,
@@ -28,11 +26,11 @@ func GeneratePlayer(name string) Player {
 		Mutations:    make(map[string]Trait),
 		Psionics:     make(map[string][]Trait),
 	}
-	SetArchetype(&player)
-	AddTraits(&player)
-	//	setInventory(&player)
-	//	setClix(&player)
-	//	setProficiency(&player)
-	//	setMastery(&player)
-	return player
+	SetArchetype(&character)
+	SetTraits(&character)
+	//	setInventory(&character)
+	//	setClix(&character)
+	//	setProficiency(&character)
+	//	setMastery(&character)
+	return character
 }
