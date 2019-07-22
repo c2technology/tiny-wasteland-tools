@@ -20,6 +20,7 @@ var vehicleChassis = []Chassis{
 	{"Motorcycle", "", func(vehicle *Vehicle) {
 		vehicle.HitPoints = 4
 		vehicle.Capacity = vehicle.Capacity + 1
+		vehicle.maxUpgrades = vehicle.maxUpgrades + 1
 		vehicle.Upgrades["Evasive"] = Upgrade{Name: "Evasive", Description: "Whenever you are attacked, you may Test. On success, the attack misses. This does not stack with Evade."}
 	}},
 	{"Sedan", "", func(vehicle *Vehicle) {
@@ -30,11 +31,13 @@ var vehicleChassis = []Chassis{
 	{"Muscle Car", "", func(vehicle *Vehicle) {
 		vehicle.HitPoints = 8
 		vehicle.Capacity = vehicle.Capacity + 3
+		vehicle.maxUpgrades = vehicle.maxUpgrades + 1
 		vehicle.Upgrades["Detroit Steel"] = Upgrade{Name: "Detroit Steel", Description: "You take no damage from Rams you initiate."}
 	}},
 	{"Truck", "", func(vehicle *Vehicle) {
 		vehicle.HitPoints = 8
 		vehicle.Capacity = vehicle.Capacity + 5
+		vehicle.maxUpgrades = vehicle.maxUpgrades + 1
 		vehicle.Upgrades["4-Wheel Drive"] = Upgrade{Name: "4-Wheel Drive", Description: "You ignore Disadvantage on driving Tests from Rough Terrain"}
 	}},
 	{"BFV", "", func(vehicle *Vehicle) {
