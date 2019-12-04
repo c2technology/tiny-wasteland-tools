@@ -2,11 +2,8 @@ package character
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
+	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
-
-var noop = func(*Character) {}
 
 type Trait struct {
 	Name        string
@@ -18,7 +15,9 @@ var traits = []Trait{
 	{"Acrobat", "You gain an Advantage when Testing to do acrobatic tricks", noop},
 	{"Ambush Specialist", "You gain Advantage on Tests to locate, disarm, and detect ambushes and traps. You also gain Advantage on Save Tests to avoid traps.", noop},
 	{"Armor Master", "You have 3 extra Hit Points when wearing Armor of any type. These cannot be healed until repaired (8 hours)", noop},
-	{"Barfighter", "Your forego your Weapon Mastery and are instead proficient in Improvised Weapon. When fighting with an Improvised Weapon, you gain one additional action each turn.", noop},
+	{"Barfighter", "Your forego your Weapon Mastery and are instead proficient in Improvised Weapon. When fighting with an Improvised Weapon, you gain one additional action each turn.", func(c *Character) {
+		c.Proficiency = Proficiency{"Improvised Weapon", noop}
+	}},
 	{"Beastspeaker", "You are able to communicate with animals in a primitive and simplistic manner.", noop},
 	{"Berserker", "When attacking with a Melee Weapon, you can choose to make an attack with Disadvantage to deal 2 damage instead of 1 if you succeed.", noop},
 	{"Blacksmith", "Once per day, you can make a Test with Advantage on any object to restore 1 Usage Rating.", noop},
@@ -43,7 +42,7 @@ var traits = []Trait{
 	{"Opportunist", "You may immediately attack with Disadvantage when an enemy within range misses an attack against you.", noop},
 	{"Perceptive", "You gain Advantage when Testing to gain information about your surroundings or find things that may be hidden. You gain this even while you sleep.", noop},
 	{"Psionic", "You have psionic abilities. When you use these abilities, you must mae a successful Test or the Action is wasted. This trait can be selected multiple times.", func(character *Character) {
-		discipline := psionicDiscipline[rando.Intn(len(psionicDiscipline))]
+		discipline := psionicDiscipline[utils.Pick(psionicDiscipline)]
 		//Psionics can exist multiple times, remove the generic entry and replace with a discipline specific one
 		character.Traits[fmt.Sprintf("Psionics: %s", discipline)] = character.Traits["Psionics"]
 		delete(character.Traits, "Psionics")
@@ -114,32 +113,32 @@ var psionicsTable = map[string][]Trait{
 	},
 }
 
-var seed = rand.NewSource(time.Now().UnixNano())
-var rando = rand.New(seed)
-
-// SetTraits to a Character. Traits may instead be Mutations and are randomly decided
-// upon and limited to the amount of Traits and/or Mutations allowed by the Character
-// Archetype.
-func SetTraits(character *Character) {
+func RollTraits(character *Character) {
 	for (len(character.Mutations) + len(character.Traits)) < character.maxTraits {
 		if len(character.Mutations) < character.maxMutations {
-			if rando.Intn(2) == 1 {
-				addMutation(character)
+			if utils.Roll(1, 2) == 1 {
+				rollMutation(character)
 				continue
 			}
 		}
-		addTrait(character)
+		rollTrait(character)
 	}
 }
 
-func addTrait(character *Character) {
-	trait := traits[rando.Intn(len(traits))]
+func rollTrait(character *Character) {
+	trait := traits[utils.Pick(traits)]
+	for _, item := range character.Traits {
+		if item.Name == trait.Name {
+			rollTrait(character)
+			return
+		}
+	}
 	character.Traits[trait.Name] = trait
 	trait.manipulate(character)
 }
 
-func addMutation(character *Character) {
-	mutation := mutations[rando.Intn(len(mutations))]
+func rollMutation(character *Character) {
+	mutation := mutations[utils.Pick(mutations)]
 	character.Mutations[mutation.Name] = mutation
 	mutation.manipulate(character)
 }
