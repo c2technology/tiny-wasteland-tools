@@ -1,9 +1,6 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-
 	"github.com/c2technology/tiny-wasteland-tools/character"
 )
 
@@ -20,12 +17,13 @@ import (
 //	assigns a drive
 func main() {
 
-	level := flag.Int("level", 1, "The generated character's level")
-	name := flag.String("name", "Player", "the generated character's name")
-	flag.Parse()
+	// level := flag.Int("level", 1, "The generated character's level")
+	// name := flag.String("name", "Player", "the generated character's name")
+	// threat := flag.String("threat", "", "the generated character's threat")
+	// flag.Parse()
 
-	fmt.Println("Level: ", level)
-	fmt.Println("Name:", name)
+	// fmt.Println("Level: ", level)
+	// fmt.Println("Name:", name)
 
 	player := character.RollPlayer("Player")
 	character.ShowCharacter(player)

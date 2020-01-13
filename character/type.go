@@ -1,6 +1,11 @@
 package character
 
-import "github.com/c2technology/tiny-wasteland-tools/utils"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/c2technology/tiny-wasteland-tools/utils"
+)
 
 //Human type Character
 const Human = "Human"
@@ -13,6 +18,15 @@ const Leader = "Leader"
 
 //WarMachine type Character
 const WarMachine = "War Machine"
+
+const unknownType = ""
+
+var types = []string{
+	Human,
+	Animal,
+	Leader,
+	WarMachine,
+}
 
 //things without combat skills
 var fodder = []string{
@@ -74,26 +88,41 @@ var solo = []string{
 	Leader,
 }
 
-//RollType for given Character
-func RollType(c *Character) {
-	switch c.Threat.Name {
-	case Fodder.Name:
-		c.Type = fodder[utils.Pick(fodder)]
-		break
-	case Low.Name:
-		c.Type = low[utils.Pick(low)]
-		break
-	case Medium.Name:
-		c.Type = medium[utils.Pick(medium)]
-		break
-	case High.Name:
-		c.Type = high[utils.Pick(high)]
-		break
-	case Heroic.Name:
-		c.Type = heroic[utils.Pick(heroic)]
-		break
-	case Solo.Name:
-		c.Type = solo[utils.Pick(solo)]
-		break
+//GetType for given value. If none can be determined an empty type is returned
+func GetType(t string) string {
+	fmt.Println(fmt.Sprintf("Calculating type for %s", t))
+	for _, v := range types {
+		if strings.ToLower(v) == strings.ToLower(t) {
+			return v
+		}
 	}
+	return unknownType
+}
+
+//RollType for given Character if one is not already present.
+func RollType(c *Character) {
+	fmt.Println(fmt.Sprintf("Type is %s", c.Type))
+	if len(c.Type) < 1 {
+		switch c.Threat.Name {
+		case Fodder.Name:
+			c.Type = fodder[utils.Pick(fodder)]
+			break
+		case Low.Name:
+			c.Type = low[utils.Pick(low)]
+			break
+		case Medium.Name:
+			c.Type = medium[utils.Pick(medium)]
+			break
+		case High.Name:
+			c.Type = high[utils.Pick(high)]
+			break
+		case Heroic.Name:
+			c.Type = heroic[utils.Pick(heroic)]
+			break
+		case Solo.Name:
+			c.Type = solo[utils.Pick(solo)]
+			break
+		}
+	}
+	fmt.Println(fmt.Sprintf("Type is %s", c.Type))
 }

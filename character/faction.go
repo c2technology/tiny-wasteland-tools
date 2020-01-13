@@ -1,9 +1,13 @@
 package character
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
+const none = ""
 const agentsOfChaos = "Agents of Chaos"
 const desertRangers = "Desert Rangers"
 const outlaws = "Outlaws"
@@ -20,16 +24,31 @@ var factions = []string{
 	ghostSyndicate,
 }
 
-//RollFaction for a given Character
-func RollFaction(c *Character) {
-	if c.Type == Animal {
-		return
+//GetFaction by name
+func GetFaction(name string) string {
+	fmt.Println(fmt.Sprintf("Calculating faction for %s", name))
+	for _, v := range factions {
+		if strings.ToLower(v) == strings.ToLower(name) {
+			return v
+		}
 	}
-	faction := factions[utils.Pick(factions)]
-	SetFaction(c, faction)
+	return none
 }
 
-//SetFaction for a given Character with the given faction
+//RollFaction for a given Character if one is not already set
+func RollFaction(c *Character) {
+	fmt.Println(fmt.Sprintf("Faction is %s", c.Faction))
+	if len(c.Faction) < 1 {
+		if c.Type == Animal {
+			return
+		}
+		faction := factions[utils.Pick(factions)]
+		SetFaction(c, faction)
+	}
+	fmt.Println(fmt.Sprintf("Faction is %s", c.Faction))
+}
+
+//SetFaction for a given Character with the given faction replacing any existing one
 func SetFaction(character *Character, faction string) {
 	character.Faction = faction
 }

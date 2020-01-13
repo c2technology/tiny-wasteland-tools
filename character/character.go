@@ -5,6 +5,9 @@ import (
 	"sort"
 )
 
+//None of any options. Use this as a default value when determining user input.
+var None = ""
+
 var noop = func(*Character) {}
 
 //Character contains defined attributes
@@ -74,13 +77,17 @@ func GenerateAnimal(threat Threat) Character {
 }
 
 //RollEnemy with given name and threat
-func RollEnemy(name string, threat int) Character {
+func RollEnemy(name string, level int, threat Threat, faction string, typ string) Character {
 	character := Character{
 		Name:      name,
+		Threat:    threat,
 		Traits:    make(map[string]Trait),
 		Mutations: make(map[string]Trait),
 		Psionics:  make(map[string][]Trait),
+		Type:      typ,
+		Faction:   faction,
 	}
+
 	RollThreat(&character)
 	RollType(&character)
 	RollFaction(&character)

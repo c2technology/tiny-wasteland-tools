@@ -1,6 +1,9 @@
 package character
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
@@ -54,6 +57,8 @@ var Solo = Threat{5, "Solo", "Solo threats are enemies that require an entire pa
 	c.Clix = 25 + utils.Roll(1, 50)
 }}
 
+var unknownThreat = Threat{-1, "", "", func(*Character) {}}
+
 //Threats available
 var Threats = []Threat{
 	Fodder,
@@ -64,13 +69,28 @@ var Threats = []Threat{
 	Solo,
 }
 
-//RollThreat for given Character
-func RollThreat(c *Character) {
-	Threat := Threats[utils.Pick(Threats)]
-	SetThreat(c, Threat)
+//GetThreat based on the given threat value. If none can be determined return Low
+func GetThreat(threat string) Threat {
+	fmt.Println(fmt.Sprintf("Calculating threat for %s", threat))
+	for _, t := range Threats {
+		if strings.ToLower(t.Name) == strings.ToLower(threat) {
+			return t
+		}
+	}
+	return unknownThreat
 }
 
-//SetThreat for given Character
+//RollThreat for given Character if one is not already set
+func RollThreat(c *Character) {
+	fmt.Println(fmt.Sprintf("Threat is %d", c.Threat.Rank))
+	if c.Threat.Rank < 0 {
+		Threat := Threats[utils.Pick(Threats)]
+		SetThreat(c, Threat)
+	}
+	fmt.Println(fmt.Sprintf("Threat is %d", c.Threat.Rank))
+}
+
+//SetThreat for given Character replacing any existing value
 func SetThreat(character *Character, Threat Threat) {
 	character.Threat = Threat
 	Threat.manipulate(character)
