@@ -172,8 +172,8 @@ func showCharacter(player Character, padding string) {
 		sort.SliceStable(player.Allies, func(i, j int) bool {
 			return player.Allies[i].Threat.Rank < player.Allies[j].Threat.Rank
 		})
-		for _, sidekick := range player.Allies {
-			showCharacter(sidekick, "     ")
+		for _, ally := range player.Allies {
+			showCharacter(ally, "     ")
 		}
 	}
 }
