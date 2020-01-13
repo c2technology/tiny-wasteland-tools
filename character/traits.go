@@ -2,9 +2,11 @@ package character
 
 import (
 	"fmt"
+
 	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
+//Trait for Characters
 type Trait struct {
 	Name        string
 	Description string
@@ -113,6 +115,7 @@ var psionicsTable = map[string][]Trait{
 	},
 }
 
+//RollTraits for given Character
 func RollTraits(character *Character) {
 	for (len(character.Mutations) + len(character.Traits)) < character.maxTraits {
 		if len(character.Mutations) < character.maxMutations {

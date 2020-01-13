@@ -2,73 +2,81 @@ package character
 
 import "github.com/c2technology/tiny-wasteland-tools/utils"
 
-const HUMAN = "Human"
-const ANIMAL = "Animal"
-const LEADER = "Leader"
-const WAR_MACHINE = "War Machine"
+//Human type Character
+const Human = "Human"
+
+//Animal type Character
+const Animal = "Animal"
+
+//Leader type Character
+const Leader = "Leader"
+
+//WarMachine type Character
+const WarMachine = "War Machine"
 
 //things without combat skills
 var fodder = []string{
-	ANIMAL,
-	HUMAN,
-	ANIMAL,
-	HUMAN,
-	ANIMAL,
-	ANIMAL,
+	Animal,
+	Human,
+	Animal,
+	Human,
+	Animal,
+	Animal,
 }
 
 //wild animal or average criminal
 var low = []string{
-	HUMAN,
-	HUMAN,
-	ANIMAL,
-	HUMAN,
-	ANIMAL,
-	HUMAN,
+	Human,
+	Human,
+	Animal,
+	Human,
+	Animal,
+	Human,
 }
 
 //dangerous in small groups - skilled combatants
 var medium = []string{
-	ANIMAL,
-	HUMAN,
-	HUMAN,
-	HUMAN,
-	HUMAN,
-	LEADER,
+	Animal,
+	Human,
+	Human,
+	Human,
+	Human,
+	Leader,
 }
 
 //as dangerous as PCs. Leader of Low or Fodder threats, unique abilities
 var high = []string{
-	HUMAN,
-	LEADER,
-	LEADER,
-	HUMAN,
-	LEADER,
-	HUMAN,
+	Human,
+	Leader,
+	Leader,
+	Human,
+	Leader,
+	Human,
 }
 
 //more skilled than PCs, a few unique abilities, several Fodder threats
 var heroic = []string{
-	LEADER,
-	LEADER,
-	LEADER,
-	LEADER,
-	LEADER,
-	HUMAN,
+	Leader,
+	Leader,
+	Leader,
+	Leader,
+	Leader,
+	Human,
 }
 
-//avenger level threats. highly skilled overpowering to PCs. Can level cities
+//avenger threat. highly skilled overpowering to PCs. Can destroy cities
 var solo = []string{
-	WAR_MACHINE,
-	LEADER,
-	WAR_MACHINE,
-	LEADER,
-	WAR_MACHINE,
-	LEADER,
+	WarMachine,
+	Leader,
+	WarMachine,
+	Leader,
+	WarMachine,
+	Leader,
 }
 
+//RollType for given Character
 func RollType(c *Character) {
-	switch c.Level.Name {
+	switch c.Threat.Name {
 	case Fodder.Name:
 		c.Type = fodder[utils.Pick(fodder)]
 		break

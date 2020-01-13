@@ -2,39 +2,38 @@ package character
 
 import "github.com/c2technology/tiny-wasteland-tools/utils"
 
+//RollSidekicks for a given Character
 func RollSidekicks(c *Character) {
 	//if the character is an animal type, it should only have animal sidekicks
-
-	switch c.Level.Name {
+	switch c.Threat.Name {
 	case Fodder.Name:
 		rollSidekicks(c, utils.Roll(2, 6), Fodder)
-		break;
+		break
 	case Low.Name:
 		rollSidekicks(c, utils.Roll(1, 4), Low)
-		break;
+		break
 	case Medium.Name:
 		rollSidekicks(c, utils.Roll(1, 4), Medium)
-		break;
+		break
 	case High.Name:
 		rollSidekicks(c, utils.Roll(1, 3), Low)
 		rollSidekicks(c, utils.Roll(1, 6), Fodder)
-		break;
+		break
 	case Heroic.Name:
 		rollSidekicks(c, utils.Roll(3, 6), Fodder)
-		break;
+		break
 	case Solo.Name:
 		rollSidekicks(c, utils.Roll(4, 6), Fodder)
-		break;
+		break
 	}
 }
 
-func rollSidekicks(c *Character, sidekicks int, level Level) {
+func rollSidekicks(c *Character, sidekicks int, threat Threat) {
 	for i := 0; i < sidekicks; i++ {
-		if c.Type == ANIMAL {
-			c.Sidekicks = append(c.Sidekicks, GenerateAnimal(level))
+		if c.Type == Animal {
+			c.Sidekicks = append(c.Sidekicks, GenerateAnimal(threat))
 		} else {
-			c.Sidekicks = append(c.Sidekicks, GenerateEnemy(level))
+			c.Sidekicks = append(c.Sidekicks, GenerateEnemy(threat))
 		}
 	}
 }
-

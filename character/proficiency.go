@@ -4,11 +4,13 @@ import (
 	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
+//Proficiency type
 type Proficiency struct {
 	Name       string
 	manipulate characterManipulator
 }
 
+//Unarmed Proficiency
 var Unarmed = Proficiency{
 	"Unarmed",
 	noop,
@@ -70,8 +72,9 @@ var heavyRanged = []string{
 	"Crossbow",
 }
 
+//RollProficiency for given Character
 func RollProficiency(character *Character) {
-	if character.Type == ANIMAL {
+	if character.Type == Animal {
 		return
 	}
 	if len(character.Proficiency.Name) > 0 {

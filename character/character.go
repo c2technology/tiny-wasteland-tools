@@ -11,7 +11,7 @@ var noop = func(*Character) {}
 type Character struct {
 	Name         string
 	HitPoints    int
-	Level        Level
+	Threat       Threat
 	Archetype    Archetype
 	Traits       map[string]Trait
 	Mutations    map[string]Trait
@@ -27,7 +27,7 @@ type Character struct {
 	maxTraits    int
 }
 
-//Generate a Character with random attributes and the given name
+//RollPlayer Character with random attributes and the given name
 func RollPlayer(name string) Character {
 	character := Character{
 		Name:         name,
@@ -48,38 +48,40 @@ func RollPlayer(name string) Character {
 	return character
 }
 
-//GenerateEnemy with given level and no sidekicks
-func GenerateEnemy(level Level) Character {
+//GenerateEnemy with given threat and no sidekicks
+func GenerateEnemy(threat Threat) Character {
 	character := Character{
 		Traits:    make(map[string]Trait),
 		Mutations: make(map[string]Trait),
 		Psionics:  make(map[string][]Trait),
 	}
-	SetLevel(&character, level)
+	SetThreat(&character, threat)
 	RollType(&character)
 	RollProficiency(&character)
 	return character
 }
 
-//GenerateEnemy with given level and no sidekicks
-func GenerateAnimal(level Level) Character {
+//GenerateAnimal companion with given threat
+func GenerateAnimal(threat Threat) Character {
 	character := Character{
 		Traits:    make(map[string]Trait),
 		Mutations: make(map[string]Trait),
 		Psionics:  make(map[string][]Trait),
-		Type: ANIMAL,
+		Type:      Animal,
 	}
-	SetLevel(&character, level)
+	SetThreat(&character, threat)
 	return character
 }
 
-func RollEnemy() Character {
+//RollEnemy with given name and threat
+func RollEnemy(name string, threat int) Character {
 	character := Character{
+		Name:      name,
 		Traits:    make(map[string]Trait),
 		Mutations: make(map[string]Trait),
 		Psionics:  make(map[string][]Trait),
 	}
-	RollLevel(&character)
+	RollThreat(&character)
 	RollType(&character)
 	RollFaction(&character)
 	RollSidekicks(&character)
@@ -89,6 +91,7 @@ func RollEnemy() Character {
 	return character
 }
 
+//ShowCharacter stats
 func ShowCharacter(player Character) {
 	showCharacter(player, "")
 }
@@ -104,9 +107,9 @@ func showCharacter(player Character, padding string) {
 	if len(player.Faction) > 0 {
 		fmt.Println(fmt.Sprintf("%sFaction: %s", padding, player.Faction))
 	}
-	if len(player.Level.Name) > 0 {
-		fmt.Println(fmt.Sprintf("%sLevel: %s", padding, player.Level.Name))
-		fmt.Println(fmt.Sprintf("%s   %s", padding, player.Level.Description))
+	if len(player.Threat.Name) > 0 {
+		fmt.Println(fmt.Sprintf("%sThreat: %s", padding, player.Threat.Name))
+		fmt.Println(fmt.Sprintf("%s   %s", padding, player.Threat.Description))
 	}
 	fmt.Println(fmt.Sprintf("%sHit Points: %d", padding, player.HitPoints))
 	if len(player.Proficiency.Name) > 0 {
@@ -119,7 +122,7 @@ func showCharacter(player Character, padding string) {
 	}
 	if len(player.Archetype.Name) > 0 {
 		fmt.Println(fmt.Sprintf("%sArchetype: %s", padding, player.Archetype.Name))
-		fmt.Println(fmt.Sprintf("%s   %s", padding,  player.Archetype.Description))
+		fmt.Println(fmt.Sprintf("%s   %s", padding, player.Archetype.Description))
 		fmt.Println(fmt.Sprintf("%sTraits:", padding))
 	}
 	if len(player.Traits) > 0 {
@@ -153,7 +156,7 @@ func showCharacter(player Character, padding string) {
 	if len(player.Sidekicks) > 0 {
 		fmt.Println(fmt.Sprintf("Sidekicks (%d):", len(player.Sidekicks)))
 		sort.SliceStable(player.Sidekicks, func(i, j int) bool {
-			return player.Sidekicks[i].Level.Rank < player.Sidekicks[j].Level.Rank
+			return player.Sidekicks[i].Threat.Rank < player.Sidekicks[j].Threat.Rank
 		})
 		for _, sidekick := range player.Sidekicks {
 			showCharacter(sidekick, "     ")

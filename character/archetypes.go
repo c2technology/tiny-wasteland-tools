@@ -57,9 +57,10 @@ var characterArchetypes = []Archetype{
 	}},
 }
 
+// RollArchetype for given character. This will update the given Character's Threat value and set additional attributes depending on the determined Threat
 func RollArchetype(character *Character) {
 	archetype := characterArchetypes[utils.Pick(characterArchetypes)]
-	if character.Level.Name == Fodder.Name || character.Level.Name == Low.Name {
+	if character.Threat.Name == Fodder.Name || character.Threat.Name == Low.Name {
 		return
 	}
 	character.Archetype = archetype
