@@ -3,6 +3,8 @@ package character
 import (
 	"fmt"
 	"sort"
+
+	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
 //None of any options. Use this as a default value when determining user input.
@@ -90,9 +92,10 @@ func RollEnemy(name string, level int, threat Threat, faction string, typ string
 		Type:        typ,
 		Faction:     faction,
 		Proficiency: proficiency,
+		Level:       level,
 		Mastery:     weapon,
 	}
-
+	AdjustLevel(&character)
 	RollThreat(&character)
 	RollType(&character)
 	RollFaction(&character)
@@ -109,6 +112,50 @@ func RollEnemy(name string, level int, threat Threat, faction string, typ string
 		return character.Allies[i].Type < character.Allies[j].Type
 	})
 	return character
+}
+
+//AdjustLevel for the given Character increasing HP and traits as appropriate until the given level is reached
+func AdjustLevel(character *Character) {
+	if character.Level < 1 {
+		character.Level = 1
+	}
+	var xp = getXP(character.Level)
+	for x := 1; x <= xp; x++ {
+		if x%6 == 0 {
+			character.HitPoints++
+		}
+		if x%8 == 0 {
+			//Not sure how to do this?
+			//proficiency++
+		}
+		if x%10 == 0 {
+			if character.maxTraits < 7 {
+				character.maxTraits++
+			} else {
+				//Remove a random trait
+				var keys = make([]string, len(character.Traits))
+				for k := range character.Traits {
+					keys = append(keys, k)
+				}
+				var i = utils.Roll(1, len(keys)) - 1
+				delete(character.Traits, keys[i])
+			}
+			//Add a new trait
+			RollTraits(character)
+		}
+	}
+}
+
+func getXP(level int) int {
+	var l = 1
+	var xp = 0
+	for l < level {
+		xp++
+		if xp%6 == 0 || xp%8 == 0 || xp%10 == 0 {
+			l++
+		}
+	}
+	return xp
 }
 
 //ShowCharacter stats
@@ -143,7 +190,7 @@ func showCharacter(player Character, padding string) {
 	if len(player.Archetype.Name) > 0 {
 		fmt.Println(fmt.Sprintf("%sArchetype: %s", padding, player.Archetype.Name))
 		fmt.Println(fmt.Sprintf("%s   %s", padding, player.Archetype.Description))
-		fmt.Println(fmt.Sprintf("%sTraits:", padding))
+		fmt.Println(fmt.Sprintf("%sTraits (%d):", padding, player.maxTraits))
 	}
 	if len(player.Traits) > 0 {
 		for key, val := range player.Traits {

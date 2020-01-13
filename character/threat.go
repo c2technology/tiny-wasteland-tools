@@ -16,13 +16,13 @@ type Threat struct {
 
 //Fodder Threat. Typically animals or people with no combat experience.
 var Fodder = Threat{0, "Fodder", "Fodder enemies are people or animals that have virtually no combat ability. They can be used to throw additional enemies into combat for a more epic feel.", func(c *Character) {
-	c.HitPoints = 1
+	c.HitPoints = c.HitPoints + 1
 	c.Clix = utils.Roll(1, 2) - 1
 }}
 
 //Low Threat. Typically wild animals or average criminals.
 var Low = Threat{1, "Low", "Low threat enemies may represent wild animals or average criminals.", func(c *Character) {
-	c.HitPoints = 2
+	c.HitPoints = c.HitPoints + 2
 	c.Clix = utils.Roll(1, 6)
 }}
 
@@ -35,8 +35,8 @@ var Medium = Threat{2, "Medium", "Medium threat enemies can begin to be dangerou
 //High Threat. These are just as dangerous as skilled Surviors. Often leaders of Low Threat or Fodder Threat enemies.
 var High = Threat{3, "High", "High threat enemies are just as dangerous as a skilled Survivor. They are often leaders of Low threat or Fodder threat enemies. Since they’re usually leaders, they often have unique abilities that bolster their minions.", func(c *Character) {
 	c.HitPoints = c.HitPoints + utils.Roll(1, 3)
-	c.maxTraits = 3
-	c.maxMutations = 1
+	c.maxTraits = c.maxTraits + 3
+	c.maxMutations = c.maxMutations + 1
 	c.Clix = 10 + utils.Roll(1, 6)
 }}
 
@@ -44,7 +44,7 @@ var High = Threat{3, "High", "High threat enemies are just as dangerous as a ski
 var Heroic = Threat{4, "Heroic", "Heroic threat enemies are easily more skilled than your average Survivor. Provide two or three unique abilities for Heroic enemies, and several Fodder enemies to protect them.", func(c *Character) {
 	c.HitPoints = c.HitPoints + 2 + utils.Roll(1, 6)
 	c.maxTraits = 5 + utils.Roll(1, 4)
-	c.maxMutations = 1
+	c.maxMutations = c.maxMutations + 1
 	c.Clix = 25 + utils.Roll(1, 25)
 }}
 
