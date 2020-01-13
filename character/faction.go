@@ -1,7 +1,6 @@
 package character
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/c2technology/tiny-wasteland-tools/utils"
@@ -26,7 +25,6 @@ var factions = []string{
 
 //GetFaction by name
 func GetFaction(name string) string {
-	fmt.Println(fmt.Sprintf("Calculating faction for %s", name))
 	for _, v := range factions {
 		if strings.ToLower(v) == strings.ToLower(name) {
 			return v
@@ -37,7 +35,6 @@ func GetFaction(name string) string {
 
 //RollFaction for a given Character if one is not already set
 func RollFaction(c *Character) {
-	fmt.Println(fmt.Sprintf("Faction is %s", c.Faction))
 	if len(c.Faction) < 1 {
 		if c.Type == Animal {
 			return
@@ -45,7 +42,6 @@ func RollFaction(c *Character) {
 		faction := factions[utils.Pick(factions)]
 		SetFaction(c, faction)
 	}
-	fmt.Println(fmt.Sprintf("Faction is %s", c.Faction))
 }
 
 //SetFaction for a given Character with the given faction replacing any existing one

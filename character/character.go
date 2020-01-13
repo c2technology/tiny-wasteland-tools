@@ -15,6 +15,7 @@ type Character struct {
 	Name         string
 	HitPoints    int
 	Threat       Threat
+	Level        int
 	Archetype    Archetype
 	Traits       map[string]Trait
 	Mutations    map[string]Trait
@@ -23,7 +24,7 @@ type Character struct {
 	Clix         int
 	Proficiency  Proficiency
 	Mastery      string
-	Sidekicks    []Character
+	Allies       []Character
 	Faction      string
 	Type         string
 	maxMutations int
@@ -34,6 +35,7 @@ type Character struct {
 func RollPlayer(name string) Character {
 	character := Character{
 		Name:         name,
+		Level:        1,
 		maxTraits:    3,
 		maxMutations: 1,
 		Clix:         10,
@@ -51,9 +53,10 @@ func RollPlayer(name string) Character {
 	return character
 }
 
-//GenerateEnemy with given threat and no sidekicks
+//GenerateEnemy with given threat and no Allies
 func GenerateEnemy(threat Threat) Character {
 	character := Character{
+		Level:     1,
 		Traits:    make(map[string]Trait),
 		Mutations: make(map[string]Trait),
 		Psionics:  make(map[string][]Trait),
@@ -91,10 +94,14 @@ func RollEnemy(name string, level int, threat Threat, faction string, typ string
 	RollThreat(&character)
 	RollType(&character)
 	RollFaction(&character)
-	RollSidekicks(&character)
+	RollAllies(&character)
 	RollArchetype(&character)
 	RollTraits(&character)
 	RollProficiency(&character)
+
+	sort.SliceStable(character.Allies, func(i, j int) bool {
+		return character.Allies[i].Type < character.Allies[j].Type
+	})
 	return character
 }
 
@@ -160,12 +167,12 @@ func showCharacter(player Character, padding string) {
 	if player.Clix > 0 {
 		fmt.Println(fmt.Sprintf("%sClix: %d", padding, player.Clix))
 	}
-	if len(player.Sidekicks) > 0 {
-		fmt.Println(fmt.Sprintf("Sidekicks (%d):", len(player.Sidekicks)))
-		sort.SliceStable(player.Sidekicks, func(i, j int) bool {
-			return player.Sidekicks[i].Threat.Rank < player.Sidekicks[j].Threat.Rank
+	if len(player.Allies) > 0 {
+		fmt.Println(fmt.Sprintf("Allies (%d):", len(player.Allies)))
+		sort.SliceStable(player.Allies, func(i, j int) bool {
+			return player.Allies[i].Threat.Rank < player.Allies[j].Threat.Rank
 		})
-		for _, sidekick := range player.Sidekicks {
+		for _, sidekick := range player.Allies {
 			showCharacter(sidekick, "     ")
 		}
 	}

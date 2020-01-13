@@ -1,7 +1,6 @@
 package character
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/c2technology/tiny-wasteland-tools/utils"
@@ -90,7 +89,6 @@ var solo = []string{
 
 //GetType for given value. If none can be determined an empty type is returned
 func GetType(t string) string {
-	fmt.Println(fmt.Sprintf("Calculating type for %s", t))
 	for _, v := range types {
 		if strings.ToLower(v) == strings.ToLower(t) {
 			return v
@@ -101,7 +99,6 @@ func GetType(t string) string {
 
 //RollType for given Character if one is not already present.
 func RollType(c *Character) {
-	fmt.Println(fmt.Sprintf("Type is %s", c.Type))
 	if len(c.Type) < 1 {
 		switch c.Threat.Name {
 		case Fodder.Name:
@@ -124,5 +121,4 @@ func RollType(c *Character) {
 			break
 		}
 	}
-	fmt.Println(fmt.Sprintf("Type is %s", c.Type))
 }

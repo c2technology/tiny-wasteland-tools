@@ -1,7 +1,6 @@
 package character
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/c2technology/tiny-wasteland-tools/utils"
@@ -71,7 +70,6 @@ var Threats = []Threat{
 
 //GetThreat based on the given threat value. If none can be determined return Low
 func GetThreat(threat string) Threat {
-	fmt.Println(fmt.Sprintf("Calculating threat for %s", threat))
 	for _, t := range Threats {
 		if strings.ToLower(t.Name) == strings.ToLower(threat) {
 			return t
@@ -82,12 +80,10 @@ func GetThreat(threat string) Threat {
 
 //RollThreat for given Character if one is not already set
 func RollThreat(c *Character) {
-	fmt.Println(fmt.Sprintf("Threat is %d", c.Threat.Rank))
 	if c.Threat.Rank < 0 {
 		Threat := Threats[utils.Pick(Threats)]
 		SetThreat(c, Threat)
 	}
-	fmt.Println(fmt.Sprintf("Threat is %d", c.Threat.Rank))
 }
 
 //SetThreat for given Character replacing any existing value
