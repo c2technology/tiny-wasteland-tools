@@ -6,7 +6,7 @@ import (
 	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
-const none = ""
+const noFaction = ""
 const agentsOfChaos = "Agents of Chaos"
 const desertRangers = "Desert Rangers"
 const outlaws = "Outlaws"
@@ -30,7 +30,7 @@ func GetFaction(name string) string {
 			return v
 		}
 	}
-	return none
+	return noFaction
 }
 
 //RollFaction for a given Character if one is not already set

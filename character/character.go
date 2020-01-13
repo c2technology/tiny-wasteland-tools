@@ -80,15 +80,17 @@ func GenerateAnimal(threat Threat) Character {
 }
 
 //RollEnemy with given name and threat
-func RollEnemy(name string, level int, threat Threat, faction string, typ string) Character {
+func RollEnemy(name string, level int, threat Threat, faction string, typ string, proficiency Proficiency, weapon string) Character {
 	character := Character{
-		Name:      name,
-		Threat:    threat,
-		Traits:    make(map[string]Trait),
-		Mutations: make(map[string]Trait),
-		Psionics:  make(map[string][]Trait),
-		Type:      typ,
-		Faction:   faction,
+		Name:        name,
+		Threat:      threat,
+		Traits:      make(map[string]Trait),
+		Mutations:   make(map[string]Trait),
+		Psionics:    make(map[string][]Trait),
+		Type:        typ,
+		Faction:     faction,
+		Proficiency: proficiency,
+		Mastery:     weapon,
 	}
 
 	RollThreat(&character)
@@ -98,6 +100,10 @@ func RollEnemy(name string, level int, threat Threat, faction string, typ string
 	RollArchetype(&character)
 	RollTraits(&character)
 	RollProficiency(&character)
+
+	if len(weapon) > 0 {
+		character.Inventory = append(character.Inventory, weapon)
+	}
 
 	sort.SliceStable(character.Allies, func(i, j int) bool {
 		return character.Allies[i].Type < character.Allies[j].Type

@@ -1,6 +1,8 @@
 package character
 
 import (
+	"strings"
+
 	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
@@ -16,27 +18,42 @@ var Unarmed = Proficiency{
 	noop,
 }
 
+var noProficiency = Proficiency{"", noop}
+
+//LightMelee Proficiency
+var LightMelee = Proficiency{"Light Melee", func(c *Character) {
+	weapon := lightMelee[utils.Pick(lightMelee)]
+	c.Inventory = append(c.Inventory, weapon)
+	c.Mastery = weapon
+}}
+
+//HeavyMelee Proficiency
+var HeavyMelee = Proficiency{"Heavy Melee", func(c *Character) {
+	weapon := heavyMelee[utils.Pick(heavyMelee)]
+	c.Inventory = append(c.Inventory, weapon)
+	c.Mastery = weapon
+}}
+
+//LightRanged Proficiency
+var LightRanged = Proficiency{"Light Ranged", func(c *Character) {
+	weapon := lightRanged[utils.Pick(lightRanged)]
+	c.Inventory = append(c.Inventory, weapon)
+	c.Mastery = weapon
+}}
+
+//HeavyRanged Proficiency
+var HeavyRanged = Proficiency{"Heavy Ranged", func(c *Character) {
+	weapon := heavyRanged[utils.Pick(heavyRanged)]
+	c.Inventory = append(c.Inventory, weapon)
+	c.Mastery = weapon
+}}
+
 var proficiencies = []Proficiency{
-	{"Light Melee", func(c *Character) {
-		weapon := lightMelee[utils.Pick(lightMelee)]
-		c.Inventory = append(c.Inventory, weapon)
-		c.Mastery = weapon
-	}},
-	{"Heavy Melee", func(c *Character) {
-		weapon := heavyMelee[utils.Pick(heavyMelee)]
-		c.Inventory = append(c.Inventory, weapon)
-		c.Mastery = weapon
-	}},
-	{"Light Ranged", func(c *Character) {
-		weapon := lightRanged[utils.Pick(lightRanged)]
-		c.Inventory = append(c.Inventory, weapon)
-		c.Mastery = weapon
-	}},
-	{"Heavy Ranged", func(c *Character) {
-		weapon := heavyRanged[utils.Pick(heavyRanged)]
-		c.Inventory = append(c.Inventory, weapon)
-		c.Mastery = weapon
-	}},
+	Unarmed,
+	LightMelee,
+	HeavyMelee,
+	LightRanged,
+	HeavyRanged,
 }
 
 var lightMelee = []string{
@@ -47,16 +64,20 @@ var lightMelee = []string{
 	"Hammer",
 	"Sickle",
 	"Scimitar",
+	"Dagger",
 }
 var heavyMelee = []string{
 	"Chainsaw",
-	"Fireman's Axe",
+	"Axe",
 	"Sword",
 	"Pike",
 	"Sledgehammer",
 	"Barbedwire Baseball Bat",
 }
 var lightRanged = []string{
+	"Bola",
+	"Blowgun",
+	"Atlatl",
 	"Revolver",
 	"Pistol",
 	"Sawed-off Shotgun",
@@ -68,8 +89,19 @@ var heavyRanged = []string{
 	"Shotgun",
 	"Assault Rifle",
 	"Marksman Rifle",
-	"Compound Bow",
+	"Bow",
 	"Crossbow",
+	"Missle launcher",
+}
+
+//GetProficiency defined by given string. If none can be matched, return a default empty Proficiency
+func GetProficiency(proficiency string) Proficiency {
+	for _, v := range proficiencies {
+		if strings.ToLower(v.Name) == strings.ToLower(proficiency) {
+			return v
+		}
+	}
+	return noProficiency
 }
 
 //RollProficiency for given Character
@@ -81,7 +113,6 @@ func RollProficiency(character *Character) {
 		return
 	}
 	proficiency := proficiencies[utils.Pick(proficiencies)]
-	character.Proficiency = proficiency
 	character.Proficiency = proficiency
 	proficiency.manipulate(character)
 }
