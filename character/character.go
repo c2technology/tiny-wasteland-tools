@@ -10,27 +10,31 @@ import (
 //None of any options. Use this as a default value when determining user input.
 var None = ""
 
+//characterManipulator that manipulates various attributes of a Character
+type characterManipulator func(*Character)
+
 var noop = func(*Character) {}
 
 //Character contains defined attributes
 type Character struct {
-	Name         string
-	HitPoints    int
-	Threat       Threat
-	Level        int
-	Archetype    Archetype
-	Traits       map[string]Trait
-	Mutations    map[string]Trait
-	Psionics     map[string][]Trait
-	Inventory    []string
-	Clix         int
-	Proficiency  Proficiency
-	Mastery      string
-	Allies       []Character
-	Faction      string
-	Type         string
-	maxMutations int
-	maxTraits    int
+	Name           string
+	HitPoints      int
+	Threat         Threat
+	Level          int
+	Archetype      Archetype
+	ArchetypeTrait Trait
+	Traits         map[string]Trait
+	Mutations      map[string]Trait
+	Psionics       map[string]Psionic
+	Inventory      []string
+	Clix           int
+	Proficiency    Proficiency
+	Mastery        string
+	Allies         []Character
+	Faction        string
+	Type           string
+	maxMutations   int
+	maxTraits      int
 }
 
 //RollPlayer Character with random attributes and the given name
@@ -43,7 +47,7 @@ func RollPlayer(name string) Character {
 		Clix:         10,
 		Traits:       make(map[string]Trait),
 		Mutations:    make(map[string]Trait),
-		Psionics:     make(map[string][]Trait),
+		Psionics:     make(map[string]Psionic),
 		Inventory:    []string{"Ragged sleeping bag", "Lighter", "Belt pouch", "Cracked electric lantern (72 hour charge)", "Strong cord (50 ft)", "Rations (7 days)", "Poncho"},
 	}
 	RollArchetype(&character)
@@ -61,7 +65,7 @@ func GenerateEnemy(threat Threat) Character {
 		Level:     1,
 		Traits:    make(map[string]Trait),
 		Mutations: make(map[string]Trait),
-		Psionics:  make(map[string][]Trait),
+		Psionics:  make(map[string]Psionic),
 	}
 	SetThreat(&character, threat)
 	RollType(&character)
@@ -74,7 +78,7 @@ func GenerateAnimal(threat Threat) Character {
 	character := Character{
 		Traits:    make(map[string]Trait),
 		Mutations: make(map[string]Trait),
-		Psionics:  make(map[string][]Trait),
+		Psionics:  make(map[string]Psionic),
 		Type:      Animal,
 	}
 	SetThreat(&character, threat)
@@ -88,21 +92,22 @@ func RollEnemy(name string, level int, threat Threat, faction string, typ string
 		Threat:      threat,
 		Traits:      make(map[string]Trait),
 		Mutations:   make(map[string]Trait),
-		Psionics:    make(map[string][]Trait),
+		Psionics:    make(map[string]Psionic),
 		Type:        typ,
 		Faction:     faction,
 		Proficiency: proficiency,
 		Level:       level,
 		Mastery:     weapon,
+		maxTraits:   3,
 	}
-	AdjustLevel(&character)
-	RollThreat(&character)
 	RollType(&character)
 	RollFaction(&character)
-	RollAllies(&character)
+	RollThreat(&character)
+	RollProficiency(&character)
 	RollArchetype(&character)
 	RollTraits(&character)
-	RollProficiency(&character)
+	RollAllies(&character)
+	AdjustLevel(&character)
 
 	if len(weapon) > 0 {
 		character.Inventory = append(character.Inventory, weapon)
@@ -133,12 +138,23 @@ func AdjustLevel(character *Character) {
 				character.maxTraits++
 			} else {
 				//Remove a random trait
-				var keys = make([]string, len(character.Traits))
-				for k := range character.Traits {
-					keys = append(keys, k)
+				character.maxTraits = 7
+				var allTraitNames = []string{}
+				for traitName := range character.Traits {
+					allTraitNames = append(allTraitNames, traitName)
 				}
-				var i = utils.Roll(1, len(keys)) - 1
-				delete(character.Traits, keys[i])
+				for mutationName := range character.Mutations {
+					allTraitNames = append(allTraitNames, mutationName)
+				}
+
+				//Remove a random trait
+				var i = utils.Roll(1, len(allTraitNames)) - 1
+				traitName := allTraitNames[i]
+				if trait, ok := character.Traits[traitName]; ok {
+					trait.revoke(trait, character)
+				} else if mutation, ok := character.Mutations[traitName]; ok {
+					mutation.revoke(mutation, character)
+				}
 			}
 			//Add a new trait
 			RollTraits(character)
@@ -168,6 +184,7 @@ func showCharacter(player Character, padding string) {
 	if len(player.Name) > 0 {
 		fmt.Println(fmt.Sprintf("%sName: %s", padding, player.Name))
 	}
+	fmt.Println(fmt.Sprintf("%sLevel: %d", padding, player.Level))
 	if len(player.Type) > 0 {
 		fmt.Println(fmt.Sprintf("%sType: %s", padding, player.Type))
 	}
@@ -183,31 +200,34 @@ func showCharacter(player Character, padding string) {
 		fmt.Println(fmt.Sprintf("%sWeapon Proficiency: %s", padding, player.Proficiency.Name))
 		fmt.Println(fmt.Sprintf("%s   You gain Disadvantage for all other weapon groups", padding))
 	}
-	if len(player.Mastery) > 0 {
+
+	if player.Type != Animal {
 		fmt.Println(fmt.Sprintf("%sWeapon Mastery: %s", padding, player.Mastery))
 		fmt.Println(fmt.Sprintf("%s   You gain Advantage when using this type of weapon", padding))
-	}
-	if len(player.Archetype.Name) > 0 {
-		fmt.Println(fmt.Sprintf("%sArchetype: %s", padding, player.Archetype.Name))
-		fmt.Println(fmt.Sprintf("%s   %s", padding, player.Archetype.Description))
+
+		if len(player.Archetype.Name) > 0 {
+			fmt.Println(fmt.Sprintf("%sArchetype: %s", padding, player.Archetype.Name))
+			fmt.Println(fmt.Sprintf("%s   %s", padding, player.Archetype.Description))
+			fmt.Println(fmt.Sprintf("%sArchetype Trait: ", padding))
+			fmt.Println(fmt.Sprintf("%s   %s: %s", padding, player.ArchetypeTrait.Name, player.ArchetypeTrait.Description))
+		}
 		fmt.Println(fmt.Sprintf("%sTraits (%d):", padding, player.maxTraits))
-	}
-	if len(player.Traits) > 0 {
 		for key, val := range player.Traits {
 			fmt.Println(fmt.Sprintf("%s  %s: %s", padding, key, val.Description))
 		}
-	}
-	if len(player.Mutations) > 0 {
-		fmt.Println(fmt.Sprintf("%sMutations:", padding))
-		for key, val := range player.Mutations {
-			fmt.Println(fmt.Sprintf("%s  %s: %s", padding, key, val.Description))
+
+		if len(player.Mutations) > 0 {
+			fmt.Println(fmt.Sprintf("%sMutations:", padding))
+			for key, val := range player.Mutations {
+				fmt.Println(fmt.Sprintf("%s  %s: %s", padding, key, val.Description))
+			}
 		}
-	}
-	if len(player.Psionics) > 0 {
-		for discipline, capabilities := range player.Psionics {
-			fmt.Println(fmt.Sprintf("%s%s Discipline:", padding, discipline))
-			for _, capability := range capabilities {
-				fmt.Println(fmt.Sprintf("%s  %s: %s", padding, capability.Name, capability.Description))
+		if len(player.Psionics) > 0 {
+			for discipline, psionic := range player.Psionics {
+				fmt.Println(fmt.Sprintf("%s%s Discipline:", padding, discipline))
+				for _, skill := range psionic.skills {
+					fmt.Println(fmt.Sprintf("%s  %s: %s", padding, skill.Name, skill.Description))
+				}
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package character
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/c2technology/tiny-wasteland-tools/utils"
@@ -23,28 +24,28 @@ var noProficiency = Proficiency{"", noop}
 //LightMelee Proficiency
 var LightMelee = Proficiency{"Light Melee", func(c *Character) {
 	weapon := lightMelee[utils.Pick(lightMelee)]
-	c.Inventory = append(c.Inventory, weapon)
+	c.Inventory = append(c.Inventory, fmt.Sprintf("%s (Light Melee)", weapon))
 	c.Mastery = weapon
 }}
 
 //HeavyMelee Proficiency
 var HeavyMelee = Proficiency{"Heavy Melee", func(c *Character) {
 	weapon := heavyMelee[utils.Pick(heavyMelee)]
-	c.Inventory = append(c.Inventory, weapon)
+	c.Inventory = append(c.Inventory, fmt.Sprintf("%s (Heavy Melee)", weapon))
 	c.Mastery = weapon
 }}
 
 //LightRanged Proficiency
 var LightRanged = Proficiency{"Light Ranged", func(c *Character) {
 	weapon := lightRanged[utils.Pick(lightRanged)]
-	c.Inventory = append(c.Inventory, weapon)
+	c.Inventory = append(c.Inventory, fmt.Sprintf("%s (Light Ranged)", weapon))
 	c.Mastery = weapon
 }}
 
 //HeavyRanged Proficiency
 var HeavyRanged = Proficiency{"Heavy Ranged", func(c *Character) {
 	weapon := heavyRanged[utils.Pick(heavyRanged)]
-	c.Inventory = append(c.Inventory, weapon)
+	c.Inventory = append(c.Inventory, fmt.Sprintf("%s (Heavy Ranged)", weapon))
 	c.Mastery = weapon
 }}
 
