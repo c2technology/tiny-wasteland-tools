@@ -1,2 +1,6 @@
 *.exe
 .vscode
+.idea
+vehicle-generator*
+character-generator*
+enemy-generator*

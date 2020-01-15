@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/c2technology/tiny-wasteland-tools/character"
 )
 
@@ -17,28 +16,15 @@ import (
 //	assigns an amount of credits
 //	assigns a drive
 func main() {
-	player := character.Generate("Player")
-	//TODO: Pull name from input or a name generator
-	fmt.Println(fmt.Sprintf("Player Name: %s", player.Name))
-	fmt.Println(fmt.Sprintf("Hit Points: %d", player.HitPoints))
-	fmt.Println(fmt.Sprintf("Archetype: %s", player.Archetype.Name))
-	fmt.Println(fmt.Sprintf("           %s", player.Archetype.Description))
-	fmt.Println("Traits:")
-	for key, val := range player.Traits {
-		fmt.Println(fmt.Sprintf("  %s: %s", key, val.Description))
-	}
-	if len(player.Mutations) > 0 {
-		fmt.Println("Mutations:")
-		for key, val := range player.Mutations {
-			fmt.Println(fmt.Sprintf("  %s: %s", key, val.Description))
-		}
-	}
-	if len(player.Psionics) > 0 {
-		for discipline, capabilities := range player.Psionics {
-			fmt.Println(fmt.Sprintf("%s Discipline:", discipline))
-			for _, capability := range capabilities {
-				fmt.Println(fmt.Sprintf("  %s: %s", capability.Name, capability.Description))
-			}
-		}
-	}
+
+	// level := flag.Int("level", 1, "The generated character's level")
+	// name := flag.String("name", "Player", "the generated character's name")
+	// threat := flag.String("threat", "", "the generated character's threat")
+	// flag.Parse()
+
+	// fmt.Println("Level: ", level)
+	// fmt.Println("Name:", name)
+
+	player := character.RollPlayer("Player")
+	character.ShowCharacter(player)
 }
