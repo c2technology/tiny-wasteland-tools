@@ -99,7 +99,7 @@ func rollTraits(character *character) {
 			rollTrait(character)
 		}
 		if i > 200 {
-			ShowCharacter(*character)
+			showCharacter(*character, "")
 			panic("exit")
 		}
 	}
