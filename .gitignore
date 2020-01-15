@@ -1,6 +1,9 @@
 *.exe
 .vscode
 .idea
-vehicle-generator*
-character-generator*
-enemy-generator*
+vehicle-generator-*
+character-generator-*
+enemy-generator-*
+./cmd/vehicle-generator/vehicle-generator*
+./cmd/character-generator/character-generator*
+./cmd/enemy-generator/enemy-generator*
