@@ -73,7 +73,7 @@ var heavyMelee = []string{
 	"Sword",
 	"Pike",
 	"Sledgehammer",
-	"Barbedwire Baseball Bat",
+	"Barbed Wire Baseball Bat",
 }
 var lightRanged = []string{
 	"Bola",
@@ -92,7 +92,7 @@ var heavyRanged = []string{
 	"Marksman Rifle",
 	"Bow",
 	"Crossbow",
-	"Missle launcher",
+	"Missile launcher",
 }
 
 //GetProficiency defined by given string. If none can be matched, return a default empty Proficiency

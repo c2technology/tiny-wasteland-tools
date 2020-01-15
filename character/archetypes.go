@@ -12,7 +12,7 @@ type Archetype struct {
 }
 
 var characterArchetypes = []Archetype{
-	{"Normals", "A run of the mill, average human. Typically, these are scavengers, farmers, or living in settlements trying to repair civiliation and get on with their lives as best they can.", func(character *Character) {
+	{"Normals", "A run of the mill, average human. Typically, these are scavengers, farmers, or living in settlements trying to repair civilization and get on with their lives as best they can.", func(character *Character) {
 		character.HitPoints = character.HitPoints + 6
 		character.ArchetypeTrait = Trait{Name: "Normal", Description: "You get to choose an additional Trait."}
 		character.maxTraits = character.maxTraits + 1
@@ -30,11 +30,11 @@ var characterArchetypes = []Archetype{
 		character.HitPoints = character.HitPoints + 6
 		character.ArchetypeTrait = Trait{Name: "Always Prepared", Description: "You gain Advantage on Tests to find shelter or aid (but not supplies or scavenging)"}
 	}},
-	{"Wanderer", "You move fromn place to place throughout the wastes picking up the pieces as you go. You don't get attached, you just keep moving on. You look like a Scavenger, but more ragged.", func(character *Character) {
+	{"Wanderer", "You move from place to place throughout the wastes picking up the pieces as you go. You don't get attached, you just keep moving on. You look like a Scavenger, but more ragged.", func(character *Character) {
 		character.HitPoints = character.HitPoints + 6
 		character.ArchetypeTrait = Trait{Name: "Unattached", Description: "Anytime anyone tries to persuade, intimidate, or threaten you, they have Disadvantage"}
 	}},
-	{"Crazy", "You are a nut job that loves the apocalypse. You've been driven mad by something and you keep yourself in the center of a whirlwind of chaos, violence, and blood. You typically have tatoos, piercings, and unusal style.", func(character *Character) {
+	{"Crazy", "You are a nut job that loves the apocalypse. You've been driven mad by something and you keep yourself in the center of a whirlwind of chaos, violence, and blood. You typically have tattoos, piercings, and unusual style.", func(character *Character) {
 		character.HitPoints = character.HitPoints + 6
 		character.ArchetypeTrait = Trait{Name: "Insane", Description: "You gain Advantage on taking risks that would make others pause"}
 	}},
@@ -42,7 +42,7 @@ var characterArchetypes = []Archetype{
 		character.HitPoints = character.HitPoints + 6
 		character.ArchetypeTrait = Trait{Name: "Mechanic", Description: "Once per day, you may test with Disadvantage to add one Usage Rating to a scavenged item"}
 	}},
-	{"Tyrants", "You are most likely to take something over and force your will upon the people. Just like warlords and generals, you are stuck in a perpetual war against the workd, orthers, or yourself. Other Tyrants are typically better dressed, tougher, and fancier than others. You seek status and look the part.", func(character *Character) {
+	{"Tyrants", "You are most likely to take something over and force your will upon the people. Just like warlords and generals, you are stuck in a perpetual war against the world, others, or yourself. Other Tyrants are typically better dressed, tougher, and fancier than others. You seek status and look the part.", func(character *Character) {
 		character.HitPoints = character.HitPoints + 6
 		character.ArchetypeTrait = Trait{Name: "Commanding", Description: "When attacked and you do not Evade, roll 1d6. If successful, the attack misses."}
 	}},

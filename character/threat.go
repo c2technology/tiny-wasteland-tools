@@ -47,7 +47,7 @@ var High = Threat{3, "High", "High threat enemies are just as dangerous as a ski
 	c.Clix = 10 + utils.Roll(1, 6)
 }}
 
-//Heroic Threat. More skilled than average Survivors. Equiped with abilities.
+//Heroic Threat. More skilled than average Survivors. Equipped with abilities.
 var Heroic = Threat{4, "Heroic", "Heroic threat enemies are easily more skilled than your average Survivor. Provide two or three unique abilities for Heroic enemies, and several Fodder enemies to protect them.", func(c *Character) {
 	c.HitPoints = c.HitPoints + 2 + utils.Roll(1, 6)
 	c.maxTraits = 5 + utils.Roll(1, 2)
@@ -56,7 +56,7 @@ var Heroic = Threat{4, "Heroic", "Heroic threat enemies are easily more skilled 
 }}
 
 //Solo Threat. Requies entire party to engage. These can threaten entire cities.
-var Solo = Threat{5, "Solo", "Solo threats are enemies that require an entire party to engage with them. This is the realm of giant monsters, city-Threating war machines, and reality-warping entities. These creatures often have a wide variety of abilities to defend themselves from attackers.", func(c *Character) {
+var Solo = Threat{5, "Solo", "Solo threats are enemies that require an entire party to engage with them. This is the realm of giant monsters, city threatening war machines, and reality-warping entities. These creatures often have a wide variety of abilities to defend themselves from attackers.", func(c *Character) {
 	c.HitPoints = c.HitPoints + 8 + utils.Roll(1, 6)
 	c.maxTraits = 7
 	c.maxMutations = 1 + utils.Roll(1, 3)

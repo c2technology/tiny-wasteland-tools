@@ -38,7 +38,7 @@ var telekinesis = Psionic{
 var telepathy = Psionic{
 	"Telepathy",
 	[]PsionicSkill{
-		{"Communicate", "You may communicate via distances to any being you are aware of. If the beign is within sight, no Test is required. Otherwise, you must make a successful Test. If they are at great distances, you must Test with Disadvantage."},
+		{"Communicate", "You may communicate via distances to any being you are aware of. If the begin is within sight, no Test is required. Otherwise, you must make a successful Test. If they are at great distances, you must Test with Disadvantage."},
 		{"Quell", "Test to quell the negative emotions in a target. If successful, you gain Advantage on your next roll against that Target."},
 		{"Timeview", "Test to gain one detail about the history of an object or location you can touch or see."},
 		{"Unmake", "Test with Disadvantage to have one enemy suffer Disadvantage on all Tests until the start of your next turn."},
