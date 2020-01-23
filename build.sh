@@ -1,10 +1,4 @@
 #!/bin/bash
-#
-# usage:
-#
-# $ sudo ./golang-crosscompile-setup.bash
-
-
 goroot=$(go env GOROOT)
 platforms="darwin/386 darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm windows/386 windows/amd64"
 programs=$(ls -l cmd/ | grep ^d | awk '{print $9}')
