@@ -145,7 +145,7 @@ func adjustLevel(character *character) {
 				}
 
 				//Remove a random trait
-				var i = utils.Roll(1, len(allTraitNames)) - 1
+				var i = utils.Pick(allTraitNames)
 				traitName := allTraitNames[i]
 				if trait, ok := character.traits[traitName]; ok {
 					trait.revoke(trait, character)
