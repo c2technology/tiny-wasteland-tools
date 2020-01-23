@@ -4,6 +4,8 @@
 vehicle-generator-*
 character-generator-*
 enemy-generator-*
+roll-*-*
 ./cmd/vehicle-generator/vehicle-generator*
 ./cmd/character-generator/character-generator*
 ./cmd/enemy-generator/enemy-generator*
+./cmd/roll/roll-*
