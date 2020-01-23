@@ -6,30 +6,40 @@ import (
 	"time"
 )
 
+//Result of rolls
+type Result struct {
+	Sum   int
+	Rolls []int
+}
+
 var seed = rand.NewSource(time.Now().UnixNano())
 var rando = rand.New(seed)
 
-func Roll(count int, die int) int {
-	return roll(count, die)
+//Roll number of sided dice
+func Roll(number int, sided int) Result {
+	return roll(number, sided)
 }
 
+//Pick a value from given values returning the index of the given values
 func Pick(values interface{}) int {
 	val := reflect.ValueOf(values)
 	if val.Kind() != reflect.Slice {
 		return 1
 	}
-	return roll(1, val.Len()) - 1
+	return roll(1, val.Len()).Sum - 1
 }
 
-func roll(count int, size int) int {
-	number := 0
+func roll(count int, size int) Result {
+	result := Result{}
 	for d := 0; d < count; d++ {
 		die := make([]int, size)
 
 		for i := 0; i < size; i++ {
 			die[i] = i + 1
 		}
-		number += die[rando.Intn(size)]
+		roll := die[rando.Intn(size)]
+		result.Rolls = append(result.Rolls, roll)
+		result.Sum += roll
 	}
-	return number
+	return result
 }

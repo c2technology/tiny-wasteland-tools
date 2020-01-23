@@ -19,13 +19,13 @@ func rollAllies(c *character) {
 	//Determine if an Ally should be generated
 	switch c.threat.name {
 	case mediumThreat.name:
-		if utils.Roll(1, 100) > 80 {
-			allies = utils.Roll(1, 4) - 1
+		if utils.Roll(1, 100).Sum > 80 {
+			allies = utils.Roll(1, 4).Sum - 1
 			for i := 0; i < allies; i++ {
 				chance := utils.Roll(1, 100)
-				if chance <= 40 {
+				if chance.Sum <= 40 {
 					c.allies = append(c.allies, generateEnemy(fodderThreat))
-				} else if chance <= 80 {
+				} else if chance.Sum <= 80 {
 					c.allies = append(c.allies, generateEnemy(lowThreat))
 				} else {
 					c.allies = append(c.allies, generateEnemy(mediumThreat))
@@ -34,11 +34,11 @@ func rollAllies(c *character) {
 		}
 		break
 	case highThreat.name:
-		if utils.Roll(1, 100) > 20 {
-			allies = utils.Roll(2, 4) - 1
+		if utils.Roll(1, 100).Sum > 20 {
+			allies = utils.Roll(2, 4).Sum - 1
 			for i := 0; i < allies; i++ {
 				chance := utils.Roll(1, 100)
-				if chance <= 80 {
+				if chance.Sum <= 80 {
 					c.allies = append(c.allies, generateEnemy(fodderThreat))
 				} else {
 					c.allies = append(c.allies, generateEnemy(lowThreat))
@@ -47,12 +47,12 @@ func rollAllies(c *character) {
 		}
 		break
 	case heroicThreat.name:
-		allies = utils.Roll(4, 2)
+		allies = utils.Roll(4, 2).Sum
 		for i := 0; i < allies; i++ {
 			chance := utils.Roll(1, 100)
-			if chance <= 60 {
+			if chance.Sum <= 60 {
 				c.allies = append(c.allies, generateEnemy(fodderThreat))
-			} else if chance <= 80 {
+			} else if chance.Sum <= 80 {
 				c.allies = append(c.allies, generateEnemy(lowThreat))
 			} else {
 				c.allies = append(c.allies, generateEnemy(mediumThreat))
@@ -61,9 +61,9 @@ func rollAllies(c *character) {
 		break
 	case soloThreat.name:
 		chance := utils.Roll(1, 100)
-		if chance <= 50 {
+		if chance.Sum <= 50 {
 			c.allies = append(c.allies, generateEnemy(fodderThreat))
-		} else if chance <= 70 {
+		} else if chance.Sum <= 70 {
 			c.allies = append(c.allies, generateEnemy(lowThreat))
 		} else {
 			c.allies = append(c.allies, generateEnemy(mediumThreat))
