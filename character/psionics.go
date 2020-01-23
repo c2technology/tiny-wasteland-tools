@@ -1,32 +1,32 @@
 package character
 
-type psionicApplicator func(Psionic, *Character)
+type psionicApplicator func(psionic, *character)
 
 //PsionicSkill within a discipline
-type PsionicSkill struct {
-	Name        string
-	Description string
+type psionicSkill struct {
+	name        string
+	description string
 }
 
 //Psionic discipline
-type Psionic struct {
-	Discipline string
-	skills     []PsionicSkill
+type psionic struct {
+	discipline string
+	skills     []psionicSkill
 	apply      psionicApplicator
 	revoke     psionicApplicator
 }
 
-var applyPsionic = func(p Psionic, c *Character) {
-	c.Psionics[p.Discipline] = p
+var applyPsionic = func(p psionic, c *character) {
+	c.psionics[p.discipline] = p
 }
-var revokePsionic = func(p Psionic, c *Character) {
-	delete(c.Psionics, p.Discipline)
+var revokePsionic = func(p psionic, c *character) {
+	delete(c.psionics, p.discipline)
 }
 var psionicDiscipline = []string{"Telekinesis", "Telepathy", "Biomancy", "Cryomancy", "Pyromancy"}
 
-var telekinesis = Psionic{
+var telekinesis = psionic{
 	"Telekinesis",
-	[]PsionicSkill{
+	[]psionicSkill{
 		{"Blast", "Test to deal 1 damage at Range. This Test is subject to all the rules of Attack."},
 		{"Hurl", "As an Action, you may move any object weighing as much as you without Testing. To Hurl violently, you must make a successful Test. To Hurl objects heavier than you, you must Test with Disadvantage."},
 		{"Shatter", "Test with Disadvantage to have all enemies you can see take 1 damage."},
@@ -35,9 +35,9 @@ var telekinesis = Psionic{
 	applyPsionic,
 	revokePsionic,
 }
-var telepathy = Psionic{
+var telepathy = psionic{
 	"Telepathy",
-	[]PsionicSkill{
+	[]psionicSkill{
 		{"Communicate", "You may communicate via distances to any being you are aware of. If the begin is within sight, no Test is required. Otherwise, you must make a successful Test. If they are at great distances, you must Test with Disadvantage."},
 		{"Quell", "Test to quell the negative emotions in a target. If successful, you gain Advantage on your next roll against that Target."},
 		{"Timeview", "Test to gain one detail about the history of an object or location you can touch or see."},
@@ -46,9 +46,9 @@ var telepathy = Psionic{
 	applyPsionic,
 	revokePsionic,
 }
-var biomancy = Psionic{
+var biomancy = psionic{
 	"Biomancy",
-	[]PsionicSkill{
+	[]psionicSkill{
 		{"Bio-Organic Shock", "Test to deal 1 damage at Range. This Test is subject to all the rules of Attack. Test with Disadvantage to deal 2 damage instead."},
 		{"Enhance", "Test to gain Advantage on your next Test. You may grant this to an Ally if you Test with Disadvantage."},
 		{"Fast", "Test to gain 2 additional Actions this turn. You lose 2 HP at the end of those Actions."},
@@ -57,9 +57,9 @@ var biomancy = Psionic{
 	applyPsionic,
 	revokePsionic,
 }
-var cryomancy = Psionic{
+var cryomancy = psionic{
 	"Cryomancy",
-	[]PsionicSkill{
+	[]psionicSkill{
 		{"Chill", "Test to have a single target take 1 damage and gains Disadvantage on their next Test."},
 		{"Coldsnap", "Test to have everything within Close range (5 ft) suffer 1 damage."},
 		{"Freeze", "Test to cause one inanimate object that is about half your size or smaller to shatter and break."},
@@ -68,9 +68,9 @@ var cryomancy = Psionic{
 	applyPsionic,
 	revokePsionic,
 }
-var pyromancy = Psionic{
+var pyromancy = psionic{
 	"Pyromancy",
-	[]PsionicSkill{
+	[]psionicSkill{
 		{"Burn", "Test to deal 1 damage at Range. This Test is subject to all the rules of an Attack."},
 		{"Ignite", "Test with Disadvantage to cause any object roughly your size or smaller to burst into flames. Anyone who touches those flames suffers 2 damage for the round. They must Test with Disadvantage to extinguish those flames."},
 		{"Extinguish", "Test to cause any flame- or heat-based Action to cool and cease."},
@@ -79,10 +79,10 @@ var pyromancy = Psionic{
 	applyPsionic,
 	revokePsionic,
 }
-var psionicsTable = map[string]Psionic{
-	telekinesis.Discipline: telekinesis,
-	telepathy.Discipline:   telepathy,
-	biomancy.Discipline:    biomancy,
-	cryomancy.Discipline:   cryomancy,
-	pyromancy.Discipline:   pyromancy,
+var psionicsTable = map[string]psionic{
+	telekinesis.discipline: telekinesis,
+	telepathy.discipline:   telepathy,
+	biomancy.discipline:    biomancy,
+	cryomancy.discipline:   cryomancy,
+	pyromancy.discipline:   pyromancy,
 }

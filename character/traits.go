@@ -6,31 +6,30 @@ import (
 	"github.com/c2technology/tiny-wasteland-tools/utils"
 )
 
-var applyTrait = func(t Trait, c *Character) {
-	c.Traits[t.Name] = t
+var applyTrait = func(t trait, c *character) {
+	c.traits[t.name] = t
 }
 
-type traitApplicator func(Trait, *Character)
+type traitApplicator func(trait, *character)
 
-var revokeTrait = func(t Trait, c *Character) {
-	delete(c.Traits, t.Name)
+var revokeTrait = func(t trait, c *character) {
+	delete(c.traits, t.name)
 }
 
-//Trait for Characters
-type Trait struct {
-	Name        string
-	Description string
+type trait struct {
+	name        string
+	description string
 	apply       traitApplicator
 	revoke      traitApplicator
 }
 
-var traits = []Trait{
+var traits = []trait{
 	{"Acrobat", "You gain an Advantage when Testing to do acrobatic tricks", applyTrait, revokeTrait},
 	{"Ambush Specialist", "You gain Advantage on Tests to locate, disarm, and detect ambushes and traps. You also gain Advantage on Save Tests to avoid traps.", applyTrait, revokeTrait},
 	{"Armor Master", "You have 3 extra Hit Points when wearing Armor of any type. These cannot be healed until repaired (8 hours)", applyTrait, revokeTrait},
-	{"Barfighter", "Your forego your Weapon Mastery and are instead proficient in Improvised Weapon. When fighting with an Improvised Weapon, you gain one additional action each turn.", func(t Trait, c *Character) {
-		c.Proficiency = Proficiency{"Improvised Weapon", noop}
-		delete(c.Traits, t.Name)
+	{"Barfighter", "Your forego your Weapon Mastery and are instead proficient in Improvised Weapon. When fighting with an Improvised Weapon, you gain one additional action each turn.", func(t trait, c *character) {
+		c.proficiency = proficiency{"Improvised Weapon", noop}
+		delete(c.traits, t.name)
 	}, revokeTrait},
 	{"Beastspeaker", "You are able to communicate with animals in a primitive and simplistic manner.", applyTrait, revokeTrait},
 	{"Berserker", "When attacking with a Melee Weapon, you can choose to make an attack with Disadvantage to deal 2 damage instead of 1 if you succeed.", applyTrait, revokeTrait},
@@ -55,63 +54,62 @@ var traits = []Trait{
 	{"Nimble Fingers", "You gain Advantage when Testing to pick locks, steam, or sleight-of-hand.", applyTrait, revokeTrait},
 	{"Opportunist", "You may immediately attack with Disadvantage when an enemy within range misses an attack against you.", applyTrait, revokeTrait},
 	{"Perceptive", "You gain Advantage when Testing to gain information about your surroundings or find things that may be hidden. You gain this even while you sleep.", applyTrait, revokeTrait},
-	{"Psionic", "You have psionic abilities. When you use these abilities, you must mae a successful Test or the Action is wasted. This trait can be selected multiple times.", func(t Trait, c *Character) {
+	{"Psionic", "You have psionic abilities. When you use these abilities, you must mae a successful Test or the Action is wasted. This trait can be selected multiple times.", func(t trait, c *character) {
 		//Determine specific Psionic Discipline
 		discipline := psionicDiscipline[utils.Pick(psionicDiscipline)]
-		t.Name = fmt.Sprintf("Psionics (%s)", discipline)
+		t.name = fmt.Sprintf("Psionics (%s)", discipline)
 		//Psionics can exist multiple times, remove the generic entry and replace with a discipline specific one
-		delete(c.Traits, "Psionics")
-		c.Traits[t.Name] = t
+		delete(c.traits, "Psionics")
+		c.traits[t.name] = t
 		//Add psionic skills to character
-		c.Psionics[t.Name] = psionicsTable[discipline]
-	}, func(t Trait, c *Character) {
-		delete(c.Traits, t.Name)
-		delete(c.Psionics, t.Name)
+		c.psionics[t.name] = psionicsTable[discipline]
+	}, func(t trait, c *character) {
+		delete(c.traits, t.name)
+		delete(c.psionics, t.name)
 	}},
 	{"Quartermaster", "When you roll for Usage, you can choose to reroll once per day. You must keep the second result.", applyTrait, revokeTrait},
 	{"Quick Shot", "You are able to reload a Ranged Weapon and fire it in a single Action.", applyTrait, revokeTrait},
 	{"Resolute", "You gain Advantage on all Save Tests.", applyTrait, revokeTrait},
-	{"Shield Bearer", "While wielding a shield, Test with 2d6 on Evade instead of 1d6. You start with a Shield.", func(t Trait, c *Character) {
-		c.Inventory = append(c.Inventory, "Shield")
-		c.Traits[t.Name] = t
+	{"Shield Bearer", "While wielding a shield, Test with 2d6 on Evade instead of 1d6. You start with a Shield.", func(t trait, c *character) {
+		c.inventory = append(c.inventory, "Shield")
+		c.traits[t.name] = t
 	}, revokeTrait},
 	{"Sneaky", "You gain Advantage when Testing to hide or sneak around without others noticing you.", applyTrait, revokeTrait},
 	{"Strong", "You gain Advantage when Testing to do something with brute force.", applyTrait, revokeTrait},
 	{"Survivalist", "You gain Advantage when Testing to forage for food, find water, seek shelter, or create shelter in the wild.", applyTrait, revokeTrait},
-	{"Tough", "You gain 2 additional HP", func(t Trait, c *Character) {
-		c.HitPoints = c.HitPoints + 2
-		c.Traits[t.Name] = t
-	}, func(t Trait, c *Character) {
-		c.HitPoints = c.HitPoints - 2
-		delete(c.Traits, t.Name)
+	{"Tough", "You gain 2 additional HP", func(t trait, c *character) {
+		c.hitPoints = c.hitPoints + 2
+		c.traits[t.name] = t
+	}, func(t trait, c *character) {
+		c.hitPoints = c.hitPoints - 2
+		delete(c.traits, t.name)
 	}},
 	{"Tracker", "You gain Advantage when Testing to track someone ", applyTrait, revokeTrait},
 	{"Trapmaster", "You gain Advantage on Saves against and Testing to create, locate, disarming, or Saving traps.", applyTrait, revokeTrait},
 	{"Vigilant", "You gain Advantage on Initiative Tests", applyTrait, revokeTrait},
 }
 
-//RollTraits for given Character
-func RollTraits(character *Character) {
+func rollTraits(character *character) {
 	i := 0
-	for (len(character.Mutations) + len(character.Traits)) < character.maxTraits {
+	for (len(character.mutations) + len(character.traits)) < character.maxTraits {
 		i++
-		if len(character.Mutations) < character.maxMutations {
+		if len(character.mutations) < character.maxMutations {
 			rollMutation(character)
 		} else {
 			rollTrait(character)
 		}
 		if i > 200 {
-			ShowCharacter(*character)
+			showCharacter(*character, "")
 			panic("exit")
 		}
 	}
 }
 
-func rollTrait(character *Character) {
-	if len(character.Traits)+len(character.Mutations) < character.maxTraits {
+func rollTrait(character *character) {
+	if len(character.traits)+len(character.mutations) < character.maxTraits {
 		trait := traits[utils.Pick(traits)]
-		for _, item := range character.Traits {
-			if item.Name == trait.Name {
+		for _, item := range character.traits {
+			if item.name == trait.name {
 				rollTrait(character)
 				return
 			}

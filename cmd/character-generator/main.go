@@ -2,6 +2,7 @@ package main
 
 import (
 	flag "flag"
+
 	"github.com/c2technology/tiny-wasteland-tools/character"
 )
 
@@ -20,20 +21,10 @@ func main() {
 
 	level := flag.Int("level", 1, "The generated character's level")
 	name := flag.String("name", "Player", "the generated character's name")
-	threatArg := flag.String("threat", "", "the generated character's threat")
-	faction := flag.String("faction", "", "the generated character's faction")
-	race := flag.String("race", "", "the generated character's race")
-	proficiencyArg := flag.String("proficiency", "", "the generated character's proficiency")
+	proficiency := flag.String("proficiency", "", "the generated character's proficiency")
+	archetype := flag.String("archetype", "", "the generated character's archetype")
 	weapon := flag.String("weapon", "", "the generated character's weapon")
 	flag.Parse()
 
-	threat := character.GetThreat(*threatArg)
-	proficiency := character.GetProficiency(*proficiencyArg)
-
-	// fmt.Println("Level: ", level)
-	// fmt.Println("Name:", name)
-
-	player := character.RollEnemy(*name, *level, threat, *faction, *race, proficiency, *weapon)
-
-	character.ShowCharacter(player)
+	character.RollCharacter(*name, *level, *archetype, *proficiency, *weapon)
 }

@@ -19,22 +19,15 @@ import (
 //	assigns a drive
 func main() {
 
-	levelArg := flag.Int("level", 1, "The generated character's level")
-	nameArg := flag.String("name", "Player", "the generated character's name")
-	threatArg := flag.String("threat", "", "The generated character's threat value")
-	factionArg := flag.String("faction", "", "The generated character's faction affiliation")
-	typeArg := flag.String("type", "", "The type of generated character (human, animal, leader, war machine)")
-	proficiencyArg := flag.String("proficiency", "", "The generated character's proficiency")
-	weaponArg := flag.String("weapon", "", "The character's starting weapon")
+	level := flag.Int("level", 1, "The generated character's level")
+	name := flag.String("name", "Player", "the generated character's name")
+	threat := flag.String("threat", "", "The generated character's threat value")
+	faction := flag.String("faction", "", "The generated character's faction affiliation")
+	characterType := flag.String("type", "", "The type of generated character (human, animal, leader, war machine)")
+	proficiency := flag.String("proficiency", "", "The generated character's proficiency")
+	weapon := flag.String("weapon", "", "The character's starting weapon")
+	archetype := flag.String("archetype", "", "The character's starting archetype")
 	flag.Parse()
 
-	level := *levelArg
-	name := *nameArg
-	proficiency := character.GetProficiency(*proficiencyArg)
-	weapon := *weaponArg
-	threat := character.GetThreat(*threatArg)
-	faction := character.GetFaction(*factionArg)
-	typ := character.GetType(*typeArg)
-	player := character.RollEnemy(name, level, threat, faction, typ, proficiency, weapon)
-	character.ShowCharacter(player)
+	character.RollEnemy(*name, *level, *threat, *archetype, *faction, *characterType, *proficiency, *weapon)
 }

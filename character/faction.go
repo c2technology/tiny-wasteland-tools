@@ -23,8 +23,7 @@ var factions = []string{
 	ghostSyndicate,
 }
 
-//GetFaction by name
-func GetFaction(name string) string {
+func getFaction(name string) string {
 	for _, v := range factions {
 		if strings.ToLower(v) == strings.ToLower(name) {
 			return v
@@ -33,18 +32,16 @@ func GetFaction(name string) string {
 	return noFaction
 }
 
-//RollFaction for a given Character if one is not already set
-func RollFaction(c *Character) {
-	if len(c.Faction) < 1 {
-		if c.Type == Animal {
+func rollFaction(c *character) {
+	if len(c.faction) < 1 {
+		if c.characterType == animal {
 			return
 		}
 		faction := factions[utils.Pick(factions)]
-		SetFaction(c, faction)
+		setFaction(c, faction)
 	}
 }
 
-//SetFaction for a given Character with the given faction replacing any existing one
-func SetFaction(character *Character, faction string) {
-	character.Faction = faction
+func setFaction(character *character, faction string) {
+	character.faction = faction
 }
